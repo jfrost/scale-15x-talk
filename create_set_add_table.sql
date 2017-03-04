@@ -1,0 +1,1 @@
+SELECT 'SET ADD TABLE (SET id = 1, origin = 1,  FULL QUALIFIED NAME = ''' || nspname || '.' ||  relname || ''', comment=''' || nspname || '.' ||  relname || ' TABLE'');' FROM pg_class JOIN pg_namespace ON relnamespace = pg_namespace.oid WHERE relkind = 'r' AND relhaspkey AND nspname NOT IN ('information_schema', 'pg_catalog');

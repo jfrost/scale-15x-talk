@@ -1,0 +1,8 @@
+#!/usr/bin/slonik
+
+CLUSTER NAME = migration;
+NODE 1 ADMIN CONNINFO='host=db1.jefftest dbname=mgd user=slony port=5432';
+NODE 2 ADMIN CONNINFO='host=db2.jefftest dbname=mgd user=slony port=5432';
+
+LOCK SET ( ID = 1, ORIGIN = 1);
+MOVE SET ( ID = 1, OLD ORIGIN = 1, NEW ORIGIN = 2);
