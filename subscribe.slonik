@@ -1,0 +1,22 @@
+#!/usr/bin/slonik
+
+CLUSTER NAME = migration;
+NODE 1 ADMIN CONNINFO='host=db1.jefftest dbname=mgd user=slony port=5432';
+NODE 2 ADMIN CONNINFO='host=db2.jefftest dbname=mgd user=slony port=5432';
+
+INIT CLUSTER (id = 1, comment = 'db1.jefftest');
+
+STORE NODE (id = 2, comment = 'db2.jefftest', event node = 1);
+
+STORE PATH (server = 1, client = 2, conninfo = 'host=db1.jefftest dbname=mgd user=slony');
+STORE PATH (server = 2, client = 1, conninfo = 'host=db2.jefftest dbname=mgd user=slony');
+
+CREATE SET (id = 1, origin = 1, comment = 'all tables and sequences');
+
+SET ADD TABLE (SET id = 1, origin = 1, TABLES='public\\.*');
+SET ADD TABLE (SET id = 1, origin = 1, TABLES='mgd\\.*');
+
+SET ADD SEQUENCE (SET id = 1, origin = 1, SEQUENCES = 'public\\.*');
+SET ADD SEQUENCE (SET id = 1, origin = 1, SEQUENCES = 'mgd\\.*');
+
+SUBSCRIBE SET (id = 1, provider = 1, receiver = 2, forward = yes);
